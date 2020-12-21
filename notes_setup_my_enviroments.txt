@@ -1,17 +1,60 @@
 Setting up my enviroment within a CMD window:
+= How to get anaconda onto an NMCI dev computer
+Author <craig.leeseberg@navy.mil>
+v1.0.0, 2020,30,06
+
+:data-uri:
+:imagesdir: images
+:source-highlighter: highlight.js
+
+
+
+
+
+Change Default HOMEDRIVE and HOMEPATH Enviromental variables:
+	I should permanently change these but have not done it yet to reinforce their pressence and affects.
+	These settings are extremely important when using git portable!  From here on out git = git portable.
+	When git is launched it will look to find the "HOME" folder.  On a windows machine "HOME" = %HOMEDRIVE%%HOMEPATH%.
+	The default settings for these variables were not what I expected and pointed to my network drive:
+		HOMEPATH=H:
+		HOMEDRIVE=\
+
+	When you put these together "HOME"=H:\
+	git-bash and git-cmd uses this as the current working directory AND the directory to store user configuration files.
+	AGAIN, When git opens on Windows it looks for the %HOMEDRIVE%%HOMEPATH% location and uses it as the
+	WORKING DIRECTORY AND DIRECTORY OF SETTINGS AND CONFIGURATIONS.  Initially this was H:\ for me.
+
+	One can change this by adding the "--cd-to-home" option when
+
+
+When launching git-bash from the comman line it will use whatever folder is launched from as the working folder.
+But it will not use that folder for settings and configurations.
+Instead it will look to the %HOMEDRIVE%%HOMEPATH% variable and use that location for settings/configs.
+Use the following git command to see what the location the configurations are comming from.
+
+git congfig --list --show-origin 
+
+This behaviour is the same if a shortcut is made as well.
+
+
+
+
+
+
+
 
 Navigate/set proper directories
-	Often times when we open a CMD window it will open into a werid directory that we don't like
-	and we need to navigate to our project directory or to a directory that we perfer.
-	cd to the directory that we prefer
+	Make the CMD.exe open up into the directory that we want.
+	We can do this in one of 2 ways:
+	1. Open the Command Prompt Properties and set the "Start in:" field to the directory or choice (couldn't find in Win7)
+
+	2. cd to the directory that we prefer (using a bat file for conveinence)
 	Tell cmd which directory to open in 
 
-	put a script into the default location cmd starts up in.
-	change the "start in" value from the properties window. I could not figure this out in Windows7
+	Put a script similar to the following in the default location cmd starts up in.
 
 	@echo off
 	rem This file is to be located in the default directory of CMD.exe
-	rem running this script changes directory to my-utilities or what I'm calling my "home"
 	cd %HOMEPATH%\my-utlities
 
 
@@ -19,7 +62,7 @@ Setup the enviromental variables and ...
 Setup paths for programs that I want execute from CMD line setup_paths.bat
 setup_env.bat
 
-
+	Change the 
 
 	@echo off
 	rem Batch file to be located into the default directory of when CMD.exe is started
@@ -37,7 +80,7 @@ setup_env.bat
 	set gitpath="C:\Users\admin\Desktop\my-utilities\PortableGit-2.29.2.3-64-bit"
 	set PATH=%gitpath%\cmd;%PATH%
 
-	rem set HOME="C:\C:\Users\admin\Desktop\my-utilities"
+	rem set HOME="C:\Users\admin\Desktop\my-utilities"
 	rem git --cd-to-home
 
 
