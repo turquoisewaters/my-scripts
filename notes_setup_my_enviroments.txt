@@ -225,3 +225,35 @@ Any naming conventions followed consistently will always help. Here are a few he
     Avoid camel case. This will minimize the bugs caused by case typos. Remember, shell variables are case sensitive.
 
     Examples: inputArray thisLooksBAD, numRecordsProcessed, veryInconsistent_style
+
+
+
+
+How to configure Windows Terminal
+------------------------------
+I was able to install Windows Terminal without admin rights. From the releases from github.
+It defaults to trying to boot up in a powershell which fails, but I can create a new tab and open a cmd.exe console tab and everthing seems to work.
+I can lauch windows terminal from the command line with the following:
+
+wt
+or
+wt.exe
+
+But both of these will open with powershell.  To open with the command prompt use the following profile argument.
+
+wt -p "Command Prompt"
+
+After searching for the Windows Terminal in the windows search bar, I was then able to add it to the start menu.
+
+How to create a shortcut to Windows Terminal:
+
+from the windows search bar search for "wt.exe" and open the folder.
+YOu can not directly navigate to this directory from file explorer due to admin right restrictions.
+Right click on the "wt.exe" and then choose Send To -> Desktop (create shortcut).
+This should have created a desktop shortcut icon.
+Right clicking on this and choosing the properties will allow one to modifiy the target.
+Now I was able to append the '-p "Command Prompt"' to the end of the target to get it to launch in the command prompt mode.
+Copy this shortcut to the task bar and we are all set!
+
+Some usefull documentation.
+https://docs.microsoft.com/en-us/windows/terminal/command-line-arguments?tabs=windows

@@ -2,8 +2,8 @@ rem "Setup the path for programs I want to run from the cmd line"
 @echo off
 
 rem "Set env variables to places I like to go"
-::set HOMEDRIVE=C:  default was "H:""
-::set HOMEPATH=\Users\craig.leeseberg\  Default was "\""
+set HOMEDRIVE=C:  default was "H:""
+set HOMEPATH=\Users\craig.leeseberg\  Default was "\""
 set mhome=%USERPROFILE%\Desktop
 set mdocs=%USERPROFILE%\Documents
 set mbin=%USERPROFILE%\my-utlities\bin
