@@ -1,0 +1,320 @@
+= Setting up my enviroment within a CMD window:
+Author <craig.leeseberg@navy.mil>
+v1.0.0, 2020,30,06
+
+:data-uri:
+:imagesdir: images
+:source-highlighter: highlight.js
+
+== Change Enviroment Variables
+
+=== What are my enviromental variables?
+
+[source, bash]
+----
+set 
+----
+
+=== Change Default HOMEDRIVE and HOMEPATH Enviromental variables for git-bash:
+
+[source, bash]
+----
+set HOMEDRIVE=C:
+set HOMEPATH=\Users\<yourusername>\whatever
+----
+==== Why?
+
+This change will tell git-bash where to source and store configuration settings files.
+
+I should permanently change these but have not done it yet to reinforce their pressence and affects. +
+These settings are extremely important when using git portable for Windows!
+For this document the use of git implies git = git portable for Windows (NOT CYGWIN).
+
+> The directory git-bash is started from will become git's working directory
+
+> The directory git-bash is started from will *NOT NECESSARILY* become git's directory for settings and config files.
+
+> I've observed that when git-bash opens it will use the %HOMEDRIVE%%HOMEPATH% for settings and config files.
+
+> I've observed that the mintty terminal will also use the %HOMEDRIVE%%HOMEPATH% for storing settings and config files ex.[.bashrc_history and .minttyrc configurations.]
+
+> I think git-bash treats the %HOMEDRIVE%%HOMEPATH% the same way as Linux treats the "HOME" directory.
+
+I believe the following to be an OK analogy:
+
+* "HOME" = %HOMEDRIVE%%HOMEPATH%.
+
+The default settings for these variables were not what I expected and pointed to my network drive:
+    
+    * HOMEDRIVE=H:
+    * HOMEPATH=\
+
+When you put these together "HOME"=H:\
+
+This was the directory that both git-bash(mintty) was using to source configuration files.
+This 
+
+When launching git from the comman line it will use whatever folder it is launched from as the working folder.
+But it will not use that folder for settings and configurations.
+Instead it will look to the %HOMEDRIVE%%HOMEPATH% variable and use that location for settings/config files.
+
+
+=== What changing the default starting working directory?
+
+Launching git from the command line feels very clean and things work the way I expected.
+The current folder becomes the active working directory once in bash I can travel up and down the file structure.
+
+Launching it from Windows File Explorer has several quirks.
+The bash window will open up but I was not able to travel up the file sturcture.
+Its like git has me trapped in the working directory, which is not where I want to be.
+This was only for git-bash, git-cmd worked fine.
+[source, bash]
+----
+cd /c/Users/path-to-where-I-want-to-go-worked
+----
+
+> The big draw back that I am experiencing launching from Windows Explorer is that Windows explorer doesn't live within my cmd.exe enviroment and thus doesn't know about the changes we've made to the HOMEDRIVE and HOMEPATH variables.  Either use setx to make those variable changes permanent, or just launch from cmd.exe
+
+=== Set the --cd-to-home option
+
+So how can we make git-bash open into the directory we want, say our current project directory
+
+* Create a shortcut to git-bash.exe
+* right click on the shortcut
+* Change the Start in string to path the working directory we want to start in
+
+If you want git-bash.exe to use the "Home" as the working directory then always open up at the 
+* Create a shortcut to git-bash.exe
+* right click on the shortcut
+* append the --cd-to-home to the end of the Target string
+
+
+
+
+[source, bash]
+----
+cd /c/Users/path-to-where-I-want-to-go-worked
+----
+
+
+
+by double clicking? What if you setup a shortcut to git-bash.exe?
+
+If you do this the you whatever directory the .exe is in becomes your active working directory.  As of this writing for me this is the following:
+
+C:\Users\craig.leeseberg\Desktop\my-utilities\repo\PortableGit
+
+
+
+
+
+
+[source, bash]
+----
+git congfig --list --show-origin 
+----
+
+
+* Adding the "--cd-to-home" option when opening git-bash
+
+
+
+Use the following git command to see what the location the configurations are comming from.
+
+PortableGit/etc/gitconfig
+[source, bash]
+----
+git congfig --list --show-origin 
+----
+
+This behaviour is the same if a shortcut is made as well.
+
+
+
+
+
+
+
+
+Navigate/set proper directories
+	Make the CMD.exe open up into the directory that we want.
+	We can do this in one of 2 ways:
+	1. Open the Command Prompt Properties and set the "Start in:" field to the directory or choice (couldn't find in Win7)
+
+	2. cd to the directory that we prefer (using a bat file for conveinence)
+	Tell cmd which directory to open in 
+
+	Put a script similar to the following in the default location cmd starts up in.
+
+	@echo off
+	rem This file is to be located in the default directory of CMD.exe
+	cd %HOMEPATH%\my-utlities
+
+
+Setup the enviromental variables and ...
+Setup paths for programs that I want execute from CMD line setup_paths.bat
+setup_env.bat
+
+	Change the 
+
+	@echo off
+	rem Batch file to be located into the default directory of when CMD.exe is started
+	set mhome=%HOMEPATH%\Desktop
+	set mdocs=%HOMEPATH%\Documents
+	set mbin=%HOMEPATH%\my-utlities\bin
+	set mu=%mhome%\my-utilities
+	set mp=%mhome%\my-projects
+	set mn=%mhome%\my-notes
+	cd %mhome%
+
+	echo "Setup the path to work with stand alone programs"
+
+	echo "Setup the path to portable git"
+	set gitpath="C:\Users\admin\Desktop\my-utilities\PortableGit-2.29.2.3-64-bit"
+	set PATH=%gitpath%\cmd;%PATH%
+
+	rem set HOME="C:\Users\admin\Desktop\my-utilities"
+	rem git --cd-to-home
+
+
+	echo "Set path for vim"
+	set vimpath="C:\Users\admin\Desktop\my-utilities\Vim\vim80"
+	set PATH=%vimpath%;%PATH%
+
+
+	echo "Set path for sublime text"
+	set sublimepath="C:\Users\admin\Desktop\my-utilities\Sublime Text Build 3143 x64"
+	set PATH=%sublimepath%;%PATH%
+
+
+	echo "Set path for VS Code
+	set vscode="C:\Users\admin\Desktop\my-utilities\VSCode-win32-x64-1.46.1"
+	set PATH=%vscode%;%PATH%
+
+
+bad part about using env variables is that you have to type extra %% and $ ($variable$, $variable) char to use them
+would a bat file be better ... then we could just type "mu" to go straight to
+
+Start Programs: start_programs.bat
+	@echo off
+	rem Batch file to start a few programs that I always use.
+	start "outlook" "C:\Program Files\Microsoft Office 15\root\office15\outlook.exe"
+	start "excel" "C:\Program Files\Microsoft Office 15\root\office15\EXCEL.exe" %mn%\bash_and_cmd_line_commands.xlsx
+	start "my-utilities" %windir%\explorer.exe %mu%
+	start "my-projects" %windir%\explorer.exe %mp%
+	start %mu%\"Sublime Text Build 3143 x64\sublime_text.exe" %mn%\my-lists.txt
+
+Include CYGWIN in path
+Exclude CYGWIN in path
+
+Launch last project
+
+
+
+Backup
+
+
+--------------------------------------------------------------------------------------------------
+I found the documentation for portable git to be very helpful.
+Read this again and again and again and again and again.
+The info and concepts here can be applied to other programs 
+--------------------------------------------------------------------------------------------------
+
+How to start using PortableGit
+------------------------------
+
+If you are comfortable with a Unix-like shell, just launch 'git-bash.exe'.
+
+If not, just launch 'git-cmd.exe'.
+
+Alternatively, you can execute these commands to modify the %path%
+variable temporarily:
+
+        set gitdir=c:\portablegit
+        set path=%gitdir%\cmd;%path%
+
+Adjust the 'gitdir' according to your setup.  As long as you do not
+close the command window, you can now simply type "git" or "gitk" to
+really call "c:\portablegit\cmd\git.exe" or "c:\portablegit\cmd\gitk.exe".
+
+By default, git-cmd and git-bash use the directory they were started from as
+the working directory when run. You can override this by passing --cd-to-home
+to them, which will set the user's home directory as the working directory (as
+if Git for Windows was installed).
+
+In addition, if you set the HOME environment variable (either permanently or
+for the current session only) you can make Git store and  use the configuration
+files in the directory specified in that variable. And if you specify
+--cd-to-home, git-bash and git-cmd will use that as the working directory when
+launched, too. For example:
+
+        set HOME=%cd%/home
+        git --cd-to-home
+will use the relative directory named home (%cd% specifies the current
+directory).
+
+Quick start
+-----------
+
+Start configuring git with your personal settings:
+        git config --global user.name "Joe Sixpack"
+        git config --global user.email joe.sixpack@g_mail.com
+
+Start using git:
+        git --help
+
+
+How to change %path% permanently
+--------------------------------
+
+You may also want to make the modification to the %path% variable a
+permanent one. The %path% variable may be changed:
+
+* either on a System level (for all users in the lower pane), if you are
+  an Administrator
+* or for your own user account only (in the upper pane).
+
+To change the %path% variable permanently:
+
+* right-click "My Computer",
+* select "Properties",
+* open "Advanced",
+* click "Environment Variables",
+* highlight the "Path" variable,
+* click "Edit" (either in upper or in lower pane),
+* add your specific path to front of "Variable value" field, separated
+  by a semicolon from the existing entry.
+  --------------------------------------------------------------------------------------------------
+
+
+  --------------------------------------------------------------------------------------------------
+  Web searches about some of the things I'm trying to do.
+
+
+
+https://stackoverflow.com/questions/5585109/path-recursively
+
+
+https://stackoverflow.com/questions/673055/correct-bash-and-shell-script-variable-capitalization
+
+Any naming conventions followed consistently will always help. Here are a few helpful tips for shell variable naming:
+
+    Use all caps and underscores for exported variables and constants, especially when they are shared across multiple scripts or processes. Use a common prefix whenever applicable so that related variables stand out and won't clash with Bash internal variables which are all upper case.
+
+    Examples:
+        Exported variables with a common prefix: JOB_HOME JOB_LOG JOB_TEMP JOB_RUN_CONTROL
+        Constants: LOG_DEBUG LOG_INFO LOG_ERROR STATUS_OK STATUS_ERROR STATUS_WARNING
+
+    Use "snake case" (all lowercase and underscores) for all variables that are scoped to a single script or a block.
+
+    Examples: input_file first_value max_amount num_errors
+
+    Use mixed case when local variable has some relationship with an environment variable, like: old_IFS old_HOME
+
+    Use a leading underscore for "private" variables and functions. This is especially relevant if you ever write a shell library where functions within a library file or across files need to share variables, without ever clashing with anything that might be similarly named in the main code.
+
+    Examples: _debug _debug_level _current_log_file
+
+    Avoid camel case. This will minimize the bugs caused by case typos. Remember, shell variables are case sensitive.
+
+    Examples: inputArray thisLooksBAD, numRecordsProcessed, veryInconsistent_style
